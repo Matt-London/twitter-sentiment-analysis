@@ -1,9 +1,16 @@
 # Get the sentiment analysis package
 install.packages("syuzhet")
+install.packages("rtweet")
+install.packages("writexl")
+library(writexl)
+library(rtweet)
 library(syuzhet)
 
+# Set directory
+setwd("C:/Users/mattl/RIT/BANA-255/twitter-sentiment-analysis")
+
 # Import from the csv
-nasaData <- read.csv("C:/Users/mattl/RIT/BANA-255/twitter-sentiment-analysis/all NASA data.csv", comment.char="#")
+nasaData <- read.csv("all NASA data.csv", comment.char="#")
 View(nasaData)
 
 # Get sentiments of each text with given  method
@@ -34,10 +41,25 @@ attachEx <- get_sentiment(text, method = "bing")
 
 
 # Merge the data set to include the sentiment analysis
+# cbind adds new columns to a data frame
+sentiNASA <- cbind(nasaData, sent1, sent2, sent3, sent4)
 
+# Attach to the new dataset
+attach(sentiNASA)
 
+# Look for duplicated cases
+dup <- duplicated(status_id)
+# Will set dup[i] to true if it is a duplicated case
 
+# Will display the items and the counts
+table(dup)
 
+# To remove duplicates, use comma to say you want them all
+noDupSentiNASA <-sentiNASA[!duplicated(sentiNASA), ]
 
+# Export it as a csv
+write_as_csv(noDupSentiNASA, "sentiNASA.csv")
+# write.csv(noDupSentiNASA, "sentiNASA.csv")
 
-
+# Can also write it as an excel document
+write_xlsx(noDupSentiNASA, "sentiNASA.xlsx")
