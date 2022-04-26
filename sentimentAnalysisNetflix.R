@@ -51,3 +51,39 @@ write_as_csv(noDupSentiNetflix, "sentiNetflix.csv")
 
 # Can also write it as an excel document
 write_xlsx(noDupSentiNetflix, "sentiNetflix.xlsx")
+
+# Make a plot
+plot(sentSyuzhet, type = "p")
+
+# View NRC dictionary
+View(get_sentiment_dictionary("nrc"))
+
+# Will get the nrc analysis that will show many different features of sentiments
+nrc_data <- get_nrc_sentiment(noDupSentiNetflix$text)
+
+# Get five number summary
+summary(nrc_data)
+
+# Create a barplot and save as png
+png("netflix_nrc_senti_graph.png", width = 12, height = 8, units = "in", res = 300)
+barplot(sort(colSums(prop.table(nrc_data))),
+        horiz = FALSE,
+        cex.names = 0.7,
+        las = 1,
+        main = "Emotions in Netflix tweets",
+        ylab = "Percentage",
+        xlab = "Emotion")
+dev.off()
+
+# Export tweets as txt to be sent through word cloud
+write.table(noDupSentiNetflix$text, file = "netflixTweets.txt", row.names = FALSE,
+            col.names = FALSE)
+
+# Look for certain words in each item
+stock <- grepl("stock", noDupSentiNetflix$text, ignore.case = FALSE)
+table(stock) # Gives sum of values
+
+# Install ggplot
+install.packages("ggplot2")
+library("ggplot2")
+
