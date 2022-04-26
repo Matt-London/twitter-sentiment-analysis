@@ -63,3 +63,35 @@ write_as_csv(noDupSentiNASA, "sentiNASA.csv")
 
 # Can also write it as an excel document
 write_xlsx(noDupSentiNASA, "sentiNASA.xlsx")
+
+# Make a plot
+plot(sent1, type = "p")
+
+# View NRC dictionary
+View(get_sentiment_dictionary("nrc"))
+
+# Will ge the nrc analysis that will show many different features of sentiments
+nrc_data <- get_nrc_sentiment(noDupSentiNASA$text)
+
+# Get five number summary
+summary(nrc_data)
+
+# Create a barplot and save as png
+png("NASA_nrc_senti_graph.png", width = 12, height = 8, units = "in", res = 300)
+barplot(sort(colSums(prop.table(nrc_data))),
+        horiz = FALSE,
+        cex.names = 0.7,
+        las = 1,
+        main = "Emotions in NASA tweets",
+        ylab = "Percentage",
+        xlab = "Emotion")
+dev.off()
+
+# Look for certain words in each item
+mars <- grepl("Mars", noDupSentiNASA$text, ignore.case = FALSE)
+table(mars) # Gives sum of values
+
+# Install ggplot
+install.packages("ggplot2")
+library("ggplot2")
+
